@@ -1,0 +1,8 @@
+*.o
+*.hi
+cabal.sandbox.config
+dist/
+\#*\#
+.\#*
+xmonad-x86_64-linux
+xmonad.errors

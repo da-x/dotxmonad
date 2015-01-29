@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Instead of metacity:
+
+gconftool-2 -s /desktop/gnome/session/required_components/windowmanager xmonad --type string
+gconftool-2 -s /desktop/gnome/applications/window_manager/current xmonad --type string
+cp xmonad.desktop ~/.local/share/applications/xmonad.desktop
