@@ -154,6 +154,8 @@ myManagingKeys conf = [
     , ("M-S-<R>", sendMessage $ Swap R)
     , ("M-S-<U>", sendMessage $ Swap U)
     , ("M-S-<D>", sendMessage $ Swap D)
+    , ("M-j", sendMessage MirrorShrink)
+    , ("M-u", sendMessage MirrorExpand)
     , ("M-<KP_Divide>", sendMessage MirrorShrink)
     , ("M-<KP_Multiply>", sendMessage MirrorExpand)
 
@@ -223,6 +225,7 @@ menuActions = M.toList $ mkKeymap baseConfig ([
     -- Various spawns
     , ("`", spawnZsh "xmonad --recompile &&  xmonad --restart")
     , ("e", spawnZsh "e-ibuffer")
+    , ("f", spawnZsh "e-open-diff-sel")
     , ("m m", spawnZsh "amixer set PCM 30%")
     , ("m <U>", spawnZsh "amixer set PCM 11.11111%+")
     , ("m <D>", spawnZsh "amixer set PCM 10%-")
@@ -268,11 +271,21 @@ myLayoutHook = toggleLayouts (avoidStruts $ noBorders Full) $
                minimize $
                desktopLayoutModifiers myBasicLayout
 
+myFilterOfSomeKeys :: XConfig x -> XConfig x
+myFilterOfSomeKeys conf@(XConfig {XMonad.modMask = modMask}) = conf {
+     keys = \i -> f $ (keys conf) i
+  }
+ where f y = y `M.difference` delete_list
+       delete_list = M.fromList $ map (\x->(x, ())) list
+       list = [
+           (modMask, xK_space) -- Used instead to switch language layouts
+         ]
+
 main :: IO ()
 main = do
   let base_config = baseConfig {
       layoutHook = myLayoutHook
-    , manageHook = manageFocus <+> manageHook baseConfig
+    -- , manageHook = manageFocus <+> manageHook baseConfig
     , focusedBorderColor 	= "#00ff00"
     , normalBorderColor 	= "#444444"
     , borderWidth = 3  -- Pixles are small these days...
@@ -280,7 +293,7 @@ main = do
     , terminal = "dup"
     , focusFollowsMouse = False -- Hell no...
     }
-  xmonad $ base_config
+  xmonad $ myFilterOfSomeKeys $ base_config
     `additionalKeys` myMenuKeys
     `additionalKeysP` (myManagingKeys base_config)
     `additionalMouseBindings` (myMouse base_config)
