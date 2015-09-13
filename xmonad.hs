@@ -236,7 +236,8 @@ menuActions = M.toList $ mkKeymap baseConfig ([
     , ("k n", spawnZsh "setxkbmap us,il -option grp:lalt_lshift_toggle")
 
     -- Captain's log... :)
-    , ("<Insert>", appendFileAdvPrompt promptConfig "/home/dan/var/notes/log.txt" "Log: " wrapStringWithCurrentTime)
+    , ("<Return>", appendFileAdvPrompt promptConfig "/home/dan/var/notes/log.txt" "Log: " wrapStringWithCurrentTime)
+    , ("<Insert>", appendFileAdvPrompt promptConfig "/home/dan/var/notes/time-usage.txt" "Time usage: " wrapStringWithCurrentTime)
 
     -- 'dup' is just a convenient external wrapper I use for spawning a shellscripts in a new rxvt-unicode console.
     , ("d m m", spawnZsh "dup mutt")
@@ -281,6 +282,10 @@ myFilterOfSomeKeys conf@(XConfig {XMonad.modMask = modMask}) = conf {
            (modMask, xK_space) -- Used instead to switch language layouts
          ]
 
+startup :: X ()
+startup = do
+  return ()
+
 main :: IO ()
 main = do
   let base_config = baseConfig {
@@ -288,6 +293,7 @@ main = do
     -- , manageHook = manageFocus <+> manageHook baseConfig
     , focusedBorderColor 	= "#00ff00"
     , normalBorderColor 	= "#444444"
+    , startupHook               = startup
     , borderWidth = 3  -- Pixles are small these days...
     , modMask = mod4Mask
     , terminal = "dup"
