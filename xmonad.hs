@@ -204,7 +204,16 @@ myManagingKeys conf = [
 -- Here we have actions, all prefixed with the Menu key
 menuActions = M.toList $ mkKeymap baseConfig ([
     -- Sometimes this is convinent:
-      ("r", mateRun)
+      ("r r", mateRun)
+    , ("r c", spawnZsh "google-chrome")
+    , ("s r l", spawnZsh "xrandr-laptop")
+    , ("s r d", spawnZsh "xrandr-dp")
+    , ("s r e 1", spawnZsh "xorg-touch-screen 1 && xnotify touchpad on")
+    , ("s r e 0", spawnZsh "xorg-touch-screen 0 && xnotify touchpad off")
+    , ("s z z", spawnZsh "sleep 3 ;  remote-display-standby")
+    , ("s c c", spawnZsh "nmcli device connect cdc-wdm1 && xnotify GSM on")
+    , ("s c 0", spawnZsh "nmcli device disconnect cdc-wdm1 ; xnotify GSM off")
+    , ("s h", spawnZsh "cat ~/.xmonad/xmonad.hs | grep '\"s ' | xnotify -x -")
 
     -- Google translation for educational purposes...
     , ("t f", translateSelection googleTranslate "en" "fr")
@@ -223,13 +232,14 @@ menuActions = M.toList $ mkKeymap baseConfig ([
     , ("/", selectSearchBrowser "google-chrome" google)
 
     -- Various spawns
-    , ("`", spawnZsh "xmonad --recompile &&  xmonad --restart")
+    , ("`", spawnZsh "~/.xmonad/recompile.sh && xnotify xmonad reloaded")
     , ("e", spawnZsh "e-ibuffer")
-    , ("f", spawnZsh "e-open-diff-sel")
     , ("m m", spawnZsh "amixer set PCM 30%")
     , ("m <U>", spawnZsh "amixer set PCM 11.11111%+")
     , ("m <D>", spawnZsh "amixer set PCM 10%-")
     , ("m p", spawnZsh "xorg-keysym play")
+    , ("m <L>", spawnZsh "xorg-keysym prev")
+    , ("m <R>", spawnZsh "xorg-keysym next")
 
     -- Keyboard settings
     , ("k i", spawnZsh "setxkbmap us -option grp:alt_lshift_toggle -variant intl")
