@@ -170,9 +170,6 @@ myManagingKeys conf = [
 
     -- Where did our floaters go?
     , ("M-<Home>", sinkAll)
-
-    -- Last workspace
-    , ("M-w", toggleWS)
     , ("M-m", submap . M.fromList $ menuActions)
 
     -- Other
@@ -195,9 +192,12 @@ myManagingKeys conf = [
     ++ [
       (otherModMasks ++ "M-" ++ [key], action tag)
       | (tag, key)  <- zip myWorkspaces "12345678"
-      , (otherModMasks, action) <- [ ("", windows . W.view) -- was W.greedyView
+      , (otherModMasks, action) <- [ ("", windows . W.greedyView)
                                       , ("S-", windows . W.shift)]
     ]
+    ++ [(m ++ key, screenWorkspace sc >>= flip whenJust (windows . f))
+        | (key, sc) <- zip ["q", "w"] [0..]
+        , (f, m) <- [(W.view, "M-"), (W.shift, "M-S-")]]
   where
     myWorkspaces = ["1","2","3","4","5","6","7","8"]
 
