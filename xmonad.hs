@@ -206,12 +206,12 @@ menuActions = M.toList $ mkKeymap baseConfig ([
     -- Sometimes this is convinent:
       ("r r", mateRun)
     , ("r c", spawnZsh "google-chrome")
-    , ("s <Escape>", spawnZsh "my-xrandr laptop  && xorg-touch-screen 1")
-    , ("s <Return>", spawnZsh "my-xrandr desktop && xorg-touch-screen 0")
+    , ("s <Escape>", spawnZsh "my-xrandr laptop  && xorg-touch-screen 1 ; nmcli radio wifi on")
+    , ("s <Return>", spawnZsh "my-xrandr desktop && xorg-touch-screen 0 ; nmcli radio wifi off")
     , ("s z", spawnZsh "xnotify Display to standby & ; sleep 3 ; remote-display-standby")
     , ("s l", spawnZsh "xnotify AFK & ; sleep 3 ; mate-screensaver-command -l")
-    , ("s c", spawnZsh "nmcli device connect cdc-wdm1 && xnotify GSM on")
-    , ("s 0", spawnZsh "nmcli device disconnect cdc-wdm1 ; xnotify GSM off")
+    , ("s c", spawnZsh "nmcli device connect cdc-wdm1 && xnotify GSM on ; nmcli radio wifi off")
+    , ("s d", spawnZsh "nmcli device disconnect cdc-wdm1 ; xnotify GSM off; nmcli radio wifi on")
     , ("s h", spawnZsh "cat ~/.xmonad/xmonad.hs | grep '\"s ' | xnotify -x -")
 
     -- Google translation for educational purposes...
