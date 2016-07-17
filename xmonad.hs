@@ -3,6 +3,7 @@
 
 import           AppendFileAdv                  (appendFileAdvPrompt)
 import           Control.Concurrent             (forkIO)
+import           Control.Monad                  (when)
 import           Data.Char                      (chr, ord)
 import qualified Data.Map                       as M
 import           System.IO                      (hClose)
@@ -191,15 +192,25 @@ myManagingKeys conf = [
        ) [1..8])
     ++ [
       (otherModMasks ++ "M-" ++ [key], action tag)
-      | (tag, key)  <- zip myWorkspaces "12345678"
-      , (otherModMasks, action) <- [ ("", windows . W.greedyView)
-                                      , ("S-", windows . W.shift)]
+      | (tag, key)  <- zip myWorkspaces "123456789"
+      , (otherModMasks, action) <- [ ("", greedyView)
+                                   , ("M-0 ", windows . W.greedyView)
+                                   , ("S-", windows . W.shift)]
     ]
     ++ [(m ++ key, screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip ["q", "w"] [0..]
         , (f, m) <- [(W.view, "M-"), (W.shift, "M-S-")]]
   where
-    myWorkspaces = ["1","2","3","4","5","6","7","8"]
+    myWorkspaces = ["1","2","3","4","5","6","7","8", "9"]
+    greedyView x = do
+        -- A hack to prevent accidental switching on the little latop
+        -- screen. TODO: use a better predicate.
+        XState { windowset = windowset } <- get
+        let W.StackSet (W.Screen _ _ sid) _ _ _ = windowset
+        let screenHeight = rect_height $ screenRect sid
+        when (screenHeight /= 720) $
+            windows $ do
+                W.greedyView x
 
 -- Here we have actions, all prefixed with the Menu key
 menuActions = M.toList $ mkKeymap baseConfig ([
